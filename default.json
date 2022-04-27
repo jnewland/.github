@@ -1,6 +1,6 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "description": "defaults",
+  "description": "default package rules from https://github.com/jnewland/.github/blob/main/default.json",
   "extends": [
     "config:base",
     ":disableDependencyDashboard",
