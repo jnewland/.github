@@ -24,9 +24,9 @@ jobs:
           APP_PEM: ${{ secrets.RENOVATE_APP_PEM }}
           APP_ID: ${{ secrets.RENOVATE_APP_ID }}
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # tag=v3
       - name: Renovate
-        uses: renovatebot/github-action@v32.32.2
+        uses: renovatebot/github-action@4880137b9a94e04c85225dec9b7bec84046cfe6f # tag=v32.32.2
         env:
           LOG_LEVEL: 'debug'
         with:
