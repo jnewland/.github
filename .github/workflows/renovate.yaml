@@ -2,7 +2,7 @@ name: Renovate
 on:
   push:
     branches:
-      - $default-branch
+      - main
   workflow_dispatch:
   workflow_call:
     secrets:
