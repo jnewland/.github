@@ -10,7 +10,9 @@
     "docker:enableMajor",
     "docker:pinDigests",
     "group:linters",
-    "helpers:pinGitHubActionDigests"
+    "helpers:pinGitHubActionDigests",
+    "preview:dockerCompose",
+    "preview:dockerVersions"
   ],
   "labels": [
     "renovate",
@@ -83,6 +85,7 @@
         ".+"
       ],
       "matchStrings": [
+        "# renovate: datasource=(?<datasource>[a-z-]+?) depName=(?<depName>[^\\s]+?)(?: (lookupName|packageName)=(?<packageName>[^\\s]+?))?(?: versioning=(?<versioning>[a-z-0-9]+?))?\\s(?:ENV|ARG) .+?_(version|VERSION)(:|=)\"?(?<currentValue>.+?)\"?\\s",
         "# renovate: datasource=(?<datasource>.*?) depName=(?<depName>.*?)( versioning=(?<versioning>.*?))?\\s.*_?(version|VERSION)(:|=) ?(?<currentValue>.*)\\s"
       ],
       "versioningTemplate": "{{#if versioning}}{{{versioning}}}{{else}}semver{{/if}}"
