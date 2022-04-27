@@ -14,5 +14,12 @@
     "docker:pinDigests",
     "group:linters",
     "helpers:pinGitHubActionDigests"
+  ],
+  "packageRules": [
+    {
+      "description": "Update the Renovate GitHub action weekly",
+      "packageNames": "renovatebot/github-action",
+      "extends": [":semanticCommitType(fix)", "schedule:weekly"]
+    }
   ]
 }
