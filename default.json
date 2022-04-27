@@ -3,10 +3,8 @@
   "description": "defaults",
   "extends": [
     "config:base",
-    ":automergeBranch",
     ":disableDependencyDashboard",
     ":maintainLockFilesWeekly",
-    ":prNotPending",
     ":rebaseStalePrs",
     ":semanticCommits",
     ":semanticCommitScope(deps)",

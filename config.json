@@ -1,6 +1,6 @@
 {
   "autodiscover": true,
-  "globalExtends": ["github>jnewland/.github"]
+  "globalExtends": ["github>jnewland/.github"],
   "logLevel": "debug",
   "onboarding": true,
   "requireConfig": false,
