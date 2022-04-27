@@ -3,6 +3,7 @@
   "description": "default package rules from https://github.com/jnewland/.github/blob/main/default.json",
   "extends": [
     "config:base",
+    ":automergeDisabled",
     ":disableDependencyDashboard",
     ":maintainLockFilesWeekly",
     ":semanticCommits",
@@ -16,6 +17,9 @@
     ":prHourlyLimitNone",
     ":prConcurrentLimitNone"
   ],
+  "pin": {
+    "automerge": false
+  },
   "labels": [
     "renovate",
     "{{datasource}}"
