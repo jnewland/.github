@@ -5,7 +5,6 @@
     "config:base",
     ":disableDependencyDashboard",
     ":maintainLockFilesWeekly",
-    ":rebaseStalePrs",
     ":semanticCommits",
     ":semanticCommitScope(deps)",
     "docker:enableMajor",
@@ -13,11 +12,80 @@
     "group:linters",
     "helpers:pinGitHubActionDigests"
   ],
+  "labels": [
+    "renovate",
+    "{{datasource}}"
+  ],
+  "rebaseWhen": "conflicted",
+  "prFooter": "",
+  "prHeader": "Greetings. Auto-update behavior is configured via `renovate.json` in this repo, which inherits defaults from https://github.com/jnewland/.github.",
   "packageRules": [
+    {
+      "updateTypes": [
+        "major"
+      ],
+      "addLabels": [
+        "major"
+      ]
+    },
+    {
+      "updateTypes": [
+        "minor"
+      ],
+      "addLabels": [
+        "minor"
+      ]
+    },
+    {
+      "updateTypes": [
+        "patch"
+      ],
+      "addLabels": [
+        "patch"
+      ]
+    },
     {
       "description": "Update the Renovate GitHub action weekly",
       "packageNames": "renovatebot/github-action",
       "extends": [":semanticCommitType(fix)", "schedule:weekly"]
+    }
+  ],
+  "regexManagers": [
+    {
+      "fileMatch": [
+        "(deployments|daemonsets)/.+\\.yaml$"
+      ],
+      "datasourceTemplate": "github-releases",
+      "matchStrings": [
+        "(ghcr|quay)\\.io\\/(?<depName>.+):(?<currentValue>.+)"
+      ]
+    },
+    {
+      "fileMatch": [
+        ".+"
+      ],
+      "datasourceTemplate": "github-releases",
+      "matchStrings": [
+        "https://raw\\.githubusercontent\\.com/(?<depName>[^/]+/[^/]+)/(?<currentValue>[^/]+)/"
+      ]
+    },
+    {
+      "fileMatch": [
+        ".+"
+      ],
+      "datasourceTemplate": "github-releases",
+      "matchStrings": [
+        "https://github\\.com/(?<depName>[^/]+/[^/]+)/releases/download/(?<currentValue>[^/]+)/"
+      ]
+    },
+    {
+      "fileMatch": [
+        ".+"
+      ],
+      "matchStrings": [
+        "# renovate: datasource=(?<datasource>.*?) depName=(?<depName>.*?)( versioning=(?<versioning>.*?))?\\s.*_?(version|VERSION)(:|=) ?(?<currentValue>.*)\\s"
+      ],
+      "versioningTemplate": "{{#if versioning}}{{{versioning}}}{{else}}semver{{/if}}"
     }
   ]
 }
