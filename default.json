@@ -1,0 +1,18 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "description": "defaults",
+  "extends": [
+    "config:base",
+    ":automergeBranch",
+    ":dependencyDashboard",
+    ":maintainLockFilesWeekly",
+    ":prNotPending",
+    ":rebaseStalePrs",
+    ":semanticCommits",
+    ":semanticCommitScope(deps)",
+    "docker:enableMajor",
+    "docker:pinDigests",
+    "group:linters",
+    "helpers:pinGitHubActionDigests"
+  ]
+}
