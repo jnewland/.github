@@ -12,7 +12,9 @@
     "group:linters",
     "helpers:pinGitHubActionDigests",
     "preview:dockerCompose",
-    "preview:dockerVersions"
+    "preview:dockerVersions",
+    ":prHourlyLimitNone",
+    ":prConcurrentLimitNone"
   ],
   "labels": [
     "renovate",
