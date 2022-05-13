@@ -22,12 +22,12 @@ jobs:
         with:
           query: |
             mutation(
-              $pullRequestId: ID!,
-              $mergeMethod: PullRequestMergeMethod!
+              $pullrequestid: ID!,
+              $mergemethod: PullRequestMergeMethod!
             ) {
                 enablePullRequestAutoMerge(input: {
-                  pullRequestId: $pullRequestId,
-                  mergeMethod: $mergeMethod
+                  pullRequestId: $pullrequestid,
+                  mergeMethod: $mergemethod
                 }) {
                 clientMutationId
                 pullRequest {
@@ -43,8 +43,8 @@ jobs:
               }
             }
 
-          pullRequestId: ${{ inputs.pullRequestId }}
-          mergeMethod: ${{ inputs.mergeMethod }}
+          pullrequestid: ${{ inputs.pullRequestId }}
+          mergemethod: ${{ inputs.mergeMethod }}
         env:
           GITHUB_TOKEN: ${{ secrets.token }}
       - run: "echo '${{ steps.enablePullRequestAutoMerge.outputs.data }}'"
