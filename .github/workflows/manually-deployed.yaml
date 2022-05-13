@@ -21,7 +21,7 @@ jobs:
           script: |
             await github.rest.repos.createCommitStatus({
               ...context.repo,
-              sha:         process.ENV.SHA,
+              sha:         process.env.SHA,
               state:       'success',
               context:     'deploy',
               description: 'Deploy attested by ${{ github.actor }}',
