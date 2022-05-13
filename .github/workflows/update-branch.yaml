@@ -1,0 +1,40 @@
+name: update branch
+on:
+  workflow_call:
+    inputs:
+      pull_number:
+        description: PR to update
+        required: true
+        type: number
+    secrets:
+      token:
+        required: true
+jobs:
+  update-branch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: update branch
+        uses: actions/github-script@7a5c598405937d486b0331594b5da2b14db670da # tag=v6.1.0
+        env:
+          PULL_NUMBER: ${{ inputs.pull_number }}
+          REF: heads/${{ github.event.repository.default_branch }}
+        with:
+          github-token: ${{ secrets.token }}
+          script: |
+            const defaultBranchHeadSha = await github.rest.git.getRef({
+              ...context.repo,
+              ref: process.env.REF
+            })
+            const pull = await github.rest.pulls.get({
+              ...context.repo,
+              pull_number: process.env.PULL_NUMBER
+            })
+            if (pull.data.mergeable_state === 'behind' || defaultBranchHeadSha.data.object.sha !== pull.data.base.sha) {
+              const updateBranch = await github.rest.pulls.updateBranch({
+                ...context.repo,
+                pull_number: process.env.PULL_NUMBER,
+                expected_head_sha: pull.data.head.sha
+              })
+              console.log(updateBranch)
+              throw 'updated branch'
+            }

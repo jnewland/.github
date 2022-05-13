@@ -1,0 +1,29 @@
+name: manually deployed
+on:
+  workflow_call:
+    inputs:
+      sha:
+        description: sha
+        required: true
+        type: string
+    secrets:
+      token:
+        required: true
+jobs:
+  attest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/github-script@7a5c598405937d486b0331594b5da2b14db670da # tag=v6.1.0
+        env:
+          SHA: ${{ inputs.sha }}
+        with:
+          github-token: ${{ secrets.token }}
+          script: |
+            await github.rest.repos.createCommitStatus({
+              ...context.repo,
+              sha:         process.ENV.SHA,
+              state:       'success',
+              context:     'deploy',
+              description: 'Deploy attested by ${{ github.actor }}',
+              target_url:  'https://github.com/${{ github.repository }}/commit/${{ process.ENV.SHA }}/checks'
+            });

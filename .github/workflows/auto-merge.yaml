@@ -1,0 +1,50 @@
+name: auto merge
+on:
+  workflow_call:
+    inputs:
+      pullRequestId:
+        description: node ID of the PR to update
+        required: true
+        type: string
+      mergeMethod:
+        description: one of https://docs.github.com/en/graphql/reference/enums#pullrequestmergemethod
+        default: SQUASH
+        type: string
+    secrets:
+      token:
+        required: true
+jobs:
+  enable:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: octokit/graphql-action@v2.2.20
+        id: enablePullRequestAutoMerge
+        with:
+          query: |
+            mutation(
+              $pullRequestId: ID!,
+              $mergeMethod: PullRequestMergeMethod!
+            ) {
+                enablePullRequestAutoMerge(input: {
+                  pullRequestId: $pullRequestId,
+                  mergeMethod: $mergeMethod
+                }) {
+                clientMutationId
+                pullRequest {
+                  id
+                  state
+                  autoMergeRequest {
+                    enabledAt
+                    enabledBy {
+                      login
+                    }
+                  }
+                }
+              }
+            }
+
+          pullRequestId: ${{ inputs.pullRequestId }}
+          repo: ${{ inputs.mergeMethod }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.token }}
+      - run: "echo '${{ steps.enablePullRequestAutoMerge.outputs.data }}'"
