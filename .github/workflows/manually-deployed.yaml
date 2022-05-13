@@ -25,5 +25,5 @@ jobs:
               state:       'success',
               context:     'deploy',
               description: 'Deploy attested by ${{ github.actor }}',
-              target_url:  'https://github.com/${{ github.repository }}/commit/${{ process.ENV.SHA }}/checks'
+              target_url:  'https://github.com/${{ github.repository }}/commit/${{ inputs.sha }}/checks'
             });
