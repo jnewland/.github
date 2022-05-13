@@ -44,7 +44,7 @@ jobs:
             }
 
           pullRequestId: ${{ inputs.pullRequestId }}
-          repo: ${{ inputs.mergeMethod }}
+          mergeMethod: ${{ inputs.mergeMethod }}
         env:
           GITHUB_TOKEN: ${{ secrets.token }}
       - run: "echo '${{ steps.enablePullRequestAutoMerge.outputs.data }}'"
