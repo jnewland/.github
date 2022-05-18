@@ -3,7 +3,6 @@ on:
   workflow_call:
   workflow_run:
     workflows:
-    # Add more workflows here!
       - renovate
     types:
       - completed
