@@ -8,67 +8,10 @@ on:
     types:
       - completed
 jobs:
-  open-close-issues:
+  workflow-failure-issues:
+    uses: urcomputeringpal/.github/.github/workflows/workflow-failure-issues.yaml@main
     if: |
       (
         github.event_name == 'schedule' ||
         endsWith(github.ref, github.event.repository.default_branch)
       )
-    runs-on: ubuntu-latest
-    steps:
-      - name: close issue if scheduled or default branch run succeeded
-        uses: actions/github-script@v6.1.0
-        env:
-          WORKFLOW_NAME: "${{ github.event.workflow.name }}"
-        if: |
-          github.event.workflow_run.conclusion == 'success'
-        with:
-          script: |
-            github.rest.issues.listForRepo({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              state: "open",
-              labels: [process.env.WORKFLOW_NAME,'failure']
-            }).then((issues) => {
-              if (issues.data.length != 0) {
-                github.rest.issues.update({
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  issue_number: issues.data[0].number,
-                  state: 'closed'
-                });
-              }
-            });
-      - name: create issue if this test failure isn't on a PR
-        uses: actions/github-script@v6.1.0
-        if: |
-          github.event.workflow_run.conclusion == 'failure'
-        env:
-          WORKFLOW_NAME: "${{ github.event.workflow.name }}"
-          ISSUE_TITLE: "${{ github.event.workflow_run.name }} failed on ${{ github.event.workflow_run.head_branch }}"
-          ISSUE_BODY: >
-            ${{ github.event.workflow_run.name }} failed on a ${{ github.event_name }} event on ${{ github.event.workflow_run.head_branch }} at ${{ github.event.workflow_run.created_at }}.
-
-
-            * ${{ github.event.workflow_run.html_url }}
-
-            * ${{ github.event.workflow.html_url }}
-
-        with:
-          script: |
-            github.rest.issues.listForRepo({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              state: "open",
-              labels: [process.env.WORKFLOW_NAME,'failure']
-            }).then((issues) => {
-              if (issues.data.length === 0) {
-                github.rest.issues.create({
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  title: process.env.ISSUE_TITLE,
-                  body: process.env.ISSUE_BODY,
-                  labels: [process.env.WORKFLOW_NAME,'failure']
-                });
-              }
-            });
