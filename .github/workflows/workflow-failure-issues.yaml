@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: close issue if scheduled or default branch run succeeded
-        uses: actions/github-script@v6.1.0
+        uses: actions/github-script@7a5c598405937d486b0331594b5da2b14db670da # tag=v6.1.0
         env:
           WORKFLOW_NAME: "${{ github.event.workflow.name }}"
         if: |
@@ -42,7 +42,7 @@ jobs:
               }
             });
       - name: create issue if this test failure isn't on a PR
-        uses: actions/github-script@v6.1.0
+        uses: actions/github-script@7a5c598405937d486b0331594b5da2b14db670da # tag=v6.1.0
         if: |
           github.event.workflow_run.conclusion == 'failure'
         env:
