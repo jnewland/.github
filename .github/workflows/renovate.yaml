@@ -29,7 +29,7 @@ jobs:
         run: |
           test -f .github/renovate.json || curl -L https://raw.githubusercontent.com/jnewland/.github/main/.github/renovate.json > .github/renovate.json
       - name: Renovate
-        uses: renovatebot/github-action@1d7bf6c77525c98076b1048507192146a793fa8c # v34.63.1
+        uses: renovatebot/github-action@7eccde7bfcc3162f7914ea64d7682e3b2ac06b04 # v34.76.0
         env:
           LOG_LEVEL: 'debug'
           RENOVATE_REPOSITORIES: ${{ github.repository }}
