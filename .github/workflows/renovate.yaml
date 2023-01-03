@@ -31,6 +31,7 @@ jobs:
           LOG_LEVEL: 'debug'
           RENOVATE_REPOSITORIES: ${{ github.repository }}
           GITHUB_COM_TOKEN: "${{ steps.get_token.outputs.app_token }}"
+          RENOVATE_USERNAME: jnewland-renovate[bot]
         with:
           configurationFile: renovate.js
           token: 'x-access-token:${{ steps.get_token.outputs.app_token }}'
