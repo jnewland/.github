@@ -25,9 +25,6 @@ jobs:
           APP_ID: ${{ secrets.RENOVATE_APP_ID }}
       - name: Checkout
         uses: actions/checkout@755da8c3cf115ac066823e79a1e1788f8940201b # v3.2.0
-      - name: Fetch config
-        run: |
-          test -f .github/renovate.json || curl -L https://raw.githubusercontent.com/jnewland/.github/main/.github/renovate.json > .github/renovate.json
       - name: Renovate
         uses: renovatebot/github-action@b0b629aa1d1bffb348fbe0e67ac2fad818d0f384 # v34.78.0
         env:
@@ -35,5 +32,5 @@ jobs:
           RENOVATE_REPOSITORIES: ${{ github.repository }}
           GITHUB_COM_TOKEN: "${{ steps.get_token.outputs.app_token }}"
         with:
-          configurationFile: .github/renovate.js
+          configurationFile: renovate.js
           token: 'x-access-token:${{ steps.get_token.outputs.app_token }}'
