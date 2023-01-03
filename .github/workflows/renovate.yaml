@@ -30,9 +30,11 @@ jobs:
         env:
           LOG_LEVEL: 'debug'
           RENOVATE_REPOSITORIES: ${{ github.repository }}
-          GITHUB_COM_TOKEN: '${{ steps.get_token.outputs.app_token }}'
+          RENOVATE_GITHUB_COM_TOKEN: '${{ steps.get_token.outputs.app_token }}'
           RENOVATE_USERNAME: 'jnewland-renovate[bot]'
           RENOVATE_GIT_AUTHOR: 'jnewland-bot <195354+jnewland-renovate[bot]@users.noreply.github.com>'
+          RENOVATE_REQUIRE_CONFIG: 'false'
+          RENOVATE_ONBOARDING: 'false'
         with:
           configurationFile: renovate.js
           token: 'x-access-token:${{ steps.get_token.outputs.app_token }}'
