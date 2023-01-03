@@ -54,27 +54,6 @@ jobs:
       token: ${{ secrets.GITHUB_TOKEN }}
 ```
 
-### Renovate
-
-Like dependabot, but customizable. Usable on any repo in my account. Requires a private GitHub App be installed to grant the permissions necessary to update Actions workflows etc.
-
-```yaml
-name: renovate
-on:
-  push:
-    branches:
-      - master
-  workflow_dispatch: {}
-  schedule:
-    - cron:  '0 */6 * * *'
-jobs:
-  renovate:
-    uses: jnewland/.github/.github/workflows/renovate.yaml@main
-    secrets:
-      RENOVATE_APP_ID: ${{ secrets.RENOVATE_APP_ID }}
-      RENOVATE_APP_PEM: ${{ secrets.RENOVATE_APP_PEM }}
-```
-
 ### Update Branch
 
 It clicks the button for you, basically. Useful to run right before an action that does a diff or a deploy on a PR.

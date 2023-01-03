@@ -1,40 +1,20 @@
-name: Renovate
+name: renovate
 on:
   push:
     branches:
       - main
-  workflow_dispatch:
-  workflow_call:
-    secrets:
-      RENOVATE_APP_PEM:
-        required: true
-      RENOVATE_APP_ID:
-        required: true
+  workflow_dispatch: {}
   schedule:
-    - cron: '0 */4 * * *'
+    - cron:  '0 */6 * * *'
+concurrency: 
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   renovate:
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    steps:
-      - name: Get token
-        id: get_token
-        uses: machine-learning-apps/actions-app-token@master
-        with:
-          APP_PEM: ${{ secrets.RENOVATE_APP_PEM }}
-          APP_ID: ${{ secrets.RENOVATE_APP_ID }}
-      - name: Checkout
-        uses: actions/checkout@755da8c3cf115ac066823e79a1e1788f8940201b # v3.2.0
-      - name: Renovate
-        uses: renovatebot/github-action@b0b629aa1d1bffb348fbe0e67ac2fad818d0f384 # v34.78.0
-        env:
-          LOG_LEVEL: 'debug'
-          RENOVATE_REPOSITORIES: ${{ github.repository }}
-          RENOVATE_GITHUB_COM_TOKEN: '${{ steps.get_token.outputs.app_token }}'
-          RENOVATE_USERNAME: 'jnewland-renovate[bot]'
-          RENOVATE_GIT_AUTHOR: 'jnewland-bot <195354+jnewland-renovate[bot]@users.noreply.github.com>'
-          RENOVATE_REQUIRE_CONFIG: 'false'
-          RENOVATE_ONBOARDING: 'false'
-        with:
-          configurationFile: renovate.js
-          token: 'x-access-token:${{ steps.get_token.outputs.app_token }}'
+    uses: urcomputeringpal/.github/.github/workflows/renovate.yaml@main
+    with:
+      renovate_app_slug: jnewland-renovate
+    secrets:
+      RENOVATE_APP_ID: ${{ secrets.RENOVATE_APP_ID }}
+      RENOVATE_APP_PEM: ${{ secrets.RENOVATE_APP_PEM }}
