@@ -14,6 +14,7 @@ module.exports = {
   ],
   "hostRules": [{
     "matchHost": "api.github.com",
-    "token": process.env.GITHUB_COM_TOKEN
+    "token": process.env.RENOVATE_GITHUB_COM_TOKEN,
+    "username": "jnewland-renovate[bot]"
   }]
 }
