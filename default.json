@@ -26,7 +26,7 @@
   ],
   "rebaseWhen": "conflicted",
   "prFooter": "",
-  "prHeader": "Greetings. Auto-update behavior is configured via `renovate.json` in this repo, which inherits defaults from https://github.com/jnewland/.github.",
+  "prHeader": "Greetings. Auto-update behavior is configured via `renovate.js` in this repo, which inherits defaults from https://github.com/jnewland/.github.",
   "packageRules": [
     {
       "updateTypes": [
