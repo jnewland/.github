@@ -33,6 +33,7 @@ jobs:
         env:
           LOG_LEVEL: 'debug'
           RENOVATE_REPOSITORIES: ${{ github.repository }}
+          GITHUB_COM_TOKEN: "${{ steps.get_token.outputs.app_token }}"
         with:
-          configurationFile: .github/renovate.json
+          configurationFile: .github/renovate.js
           token: 'x-access-token:${{ steps.get_token.outputs.app_token }}'

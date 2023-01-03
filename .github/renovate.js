@@ -1,4 +1,4 @@
-{
+module.exports = {
   "globalExtends": ["github>jnewland/.github"],
   "logLevel": "debug",
   "onboarding": true,
@@ -11,5 +11,9 @@
   "allowedPostUpgradeCommands": [
     "./script/sync-components",
     "make"
-  ]
+  ],
+  "hostRules": [{
+    "matchHost": "api.github.com",
+    "token": process.env.GITHUB_COM_TOKEN
+  }]
 }
