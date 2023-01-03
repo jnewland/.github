@@ -1,5 +1,4 @@
 module.exports = {
-  "globalExtends": ["github>jnewland/.github"],
   "logLevel": "debug",
   "onboarding": true,
   "requireConfig": false,
