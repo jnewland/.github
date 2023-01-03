@@ -1,4 +1,4 @@
-module.exports = {
+{
   "globalExtends": ["github>jnewland/.github"],
   "logLevel": "debug",
   "onboarding": true,
@@ -8,5 +8,5 @@ module.exports = {
   "allowedPostUpgradeCommands": [
     "./script/sync-components",
     "make"
-  ],
+  ]
 }
