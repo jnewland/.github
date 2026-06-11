@@ -21,20 +21,26 @@ jobs:
         with:
           github-token: ${{ secrets.token }}
           script: |
-            const defaultBranchHeadSha = await github.rest.git.getRef({
+            const pullNumber = parseInt(process.env.PULL_NUMBER, 10)
+            const defaultBranchRef = await github.rest.git.getRef({
               ...context.repo,
               ref: process.env.REF
             })
+            const defaultBranchSha = defaultBranchRef.data.object.sha
             const pull = await github.rest.pulls.get({
               ...context.repo,
-              pull_number: process.env.PULL_NUMBER
+              pull_number: pullNumber
             })
-            if (pull.data.mergeable_state === 'behind' || defaultBranchHeadSha.data.object.sha !== pull.data.base.sha) {
-              const updateBranch = await github.rest.pulls.updateBranch({
+            const { mergeable_state, base, head } = pull.data
+            console.log(`PR #${pullNumber}: mergeable_state=${mergeable_state}, base.sha=${base.sha}, default_branch.sha=${defaultBranchSha}`)
+            if (mergeable_state === 'behind' || defaultBranchSha !== base.sha) {
+              console.log(`Updating PR #${pullNumber} branch`)
+              const result = await github.rest.pulls.updateBranch({
                 ...context.repo,
-                pull_number: process.env.PULL_NUMBER,
-                expected_head_sha: pull.data.head.sha
+                pull_number: pullNumber,
+                expected_head_sha: head.sha
               })
-              console.log(updateBranch)
+              console.log(`Update result: ${result.data.message}`)
               throw 'updated branch'
             }
+            console.log(`PR #${pullNumber} is up to date, no update needed`)
