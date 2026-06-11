@@ -9,32 +9,54 @@ on:
     secrets:
       token:
         required: true
+  pull_request:
+    paths:
+      - .github/workflows/update-branch.yaml
 jobs:
   update-branch:
     runs-on: ubuntu-latest
     steps:
       - name: update branch
-        uses: actions/github-script@d7906e4ad0b1822421a7e6a35d5ca353c962f410 # v6.4.1
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
         env:
-          PULL_NUMBER: ${{ inputs.pull_number }}
+          PULL_NUMBER: ${{ inputs.pull_number || github.event.pull_request.number }}
           REF: heads/${{ github.event.repository.default_branch }}
         with:
-          github-token: ${{ secrets.token }}
+          github-token: ${{ secrets.token || github.token }}
           script: |
-            const defaultBranchHeadSha = await github.rest.git.getRef({
+            const pullNumber = parseInt(process.env.PULL_NUMBER, 10)
+            const defaultBranchRef = await github.rest.git.getRef({
               ...context.repo,
               ref: process.env.REF
             })
-            const pull = await github.rest.pulls.get({
-              ...context.repo,
-              pull_number: process.env.PULL_NUMBER
-            })
-            if (pull.data.mergeable_state === 'behind' || defaultBranchHeadSha.data.object.sha !== pull.data.base.sha) {
-              const updateBranch = await github.rest.pulls.updateBranch({
+            const defaultBranchSha = defaultBranchRef.data.object.sha
+
+            const deadline = Date.now() + 30_000
+            let mergeable_state, base, head
+            while (true) {
+              ;({ mergeable_state, base, head } = (await github.rest.pulls.get({
                 ...context.repo,
-                pull_number: process.env.PULL_NUMBER,
-                expected_head_sha: pull.data.head.sha
+                pull_number: pullNumber
+              })).data)
+              const needsUpdate = mergeable_state === 'behind' || defaultBranchSha !== base.sha
+              console.log(`PR #${pullNumber}: mergeable_state=${mergeable_state}, base.sha=${base.sha}, default_branch.sha=${defaultBranchSha}`)
+              if (!['unknown', 'unstable'].includes(mergeable_state) || !needsUpdate) break
+              if (Date.now() >= deadline) {
+                console.log(`PR #${pullNumber} mergeable_state still ${mergeable_state} after 30s, proceeding anyway`)
+                break
+              }
+              console.log(`PR #${pullNumber} mergeable_state is ${mergeable_state}, retrying...`)
+              await new Promise(r => setTimeout(r, 3_000))
+            }
+
+            if (mergeable_state === 'behind' || defaultBranchSha !== base.sha) {
+              console.log(`Updating PR #${pullNumber} branch`)
+              const result = await github.rest.pulls.updateBranch({
+                ...context.repo,
+                pull_number: pullNumber,
+                expected_head_sha: head.sha
               })
-              console.log(updateBranch)
+              console.log(`Update result: ${result.data.message}`)
               throw 'updated branch'
             }
+            console.log(`PR #${pullNumber} is up to date, no update needed`)
