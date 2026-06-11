@@ -17,7 +17,7 @@ jobs:
   enable:
     runs-on: ubuntu-latest
     steps:
-      - uses: octokit/graphql-action@f7836e89a7e5bac63911bbe9653c21147b3d9bc3 # v2.3.3
+      - uses: octokit/graphql-action@ddde8ebb2493e79f390e6449c725c21663a67505 # v3.0.2
         id: enablePullRequestAutoMerge
         with:
           query: |
