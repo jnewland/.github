@@ -30,12 +30,25 @@ jobs:
               ref: process.env.REF
             })
             const defaultBranchSha = defaultBranchRef.data.object.sha
-            const pull = await github.rest.pulls.get({
-              ...context.repo,
-              pull_number: pullNumber
-            })
-            const { mergeable_state, base, head } = pull.data
-            console.log(`PR #${pullNumber}: mergeable_state=${mergeable_state}, base.sha=${base.sha}, default_branch.sha=${defaultBranchSha}`)
+
+            const deadline = Date.now() + 30_000
+            let mergeable_state, base, head
+            while (true) {
+              ;({ mergeable_state, base, head } = (await github.rest.pulls.get({
+                ...context.repo,
+                pull_number: pullNumber
+              })).data)
+              const needsUpdate = mergeable_state === 'behind' || defaultBranchSha !== base.sha
+              console.log(`PR #${pullNumber}: mergeable_state=${mergeable_state}, base.sha=${base.sha}, default_branch.sha=${defaultBranchSha}`)
+              if (!['unknown', 'unstable'].includes(mergeable_state) || !needsUpdate) break
+              if (Date.now() >= deadline) {
+                console.log(`PR #${pullNumber} mergeable_state still ${mergeable_state} after 30s, proceeding anyway`)
+                break
+              }
+              console.log(`PR #${pullNumber} mergeable_state is ${mergeable_state}, retrying...`)
+              await new Promise(r => setTimeout(r, 3_000))
+            }
+
             if (mergeable_state === 'behind' || defaultBranchSha !== base.sha) {
               console.log(`Updating PR #${pullNumber} branch`)
               const result = await github.rest.pulls.updateBranch({
