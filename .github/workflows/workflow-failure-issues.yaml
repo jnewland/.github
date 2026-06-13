@@ -8,7 +8,7 @@ on:
       - completed
 jobs:
   workflow-failure-issues:
-    uses: urcomputeringpal/.github/.github/workflows/workflow-failure-issues.yaml@484b44904881d6ef6f0d38a3401fac405f81cc2f # main
+    uses: urcomputeringpal/.github/.github/workflows/workflow-failure-issues.yaml@59512c621c99723dfeee313e27b04385185b5f74 # main
     if: |
       (
         github.event_name == 'schedule' ||
